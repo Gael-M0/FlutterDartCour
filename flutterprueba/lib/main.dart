@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'circular_progress_button.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Hello World Web',
+      title: 'Circular Progress Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Hello World Web App'),
+          title: const Text('Circular Progress Demo'),
         ),
-        body: Center(
-          child: Text(
-            'Hello World',
-            style: TextStyle(fontSize: 24),
-          ),
-        ),
+        body: const CircularProgressButton(),
       ),
     );
   }
