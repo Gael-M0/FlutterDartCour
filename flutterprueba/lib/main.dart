@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'circular_progress_button.dart';
+import 'frutas_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,16 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Circular Progress Demo',
+      title: 'Frutas Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Circular Progress Demo'),
-        ),
-        body: const CircularProgressButton(),
-      ),
+      home: const FrutasScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
