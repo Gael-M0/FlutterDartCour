@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'data/frutas_Data.dart';
 
 class prueba_flutter extends StatelessWidget{
 
@@ -12,7 +13,7 @@ class prueba_flutter extends StatelessWidget{
         children: <Widget>[
 
           Container(
-            color: Colors.blueAccent,
+            color: Colors.black,
 
           ),
 
@@ -26,7 +27,7 @@ class prueba_flutter extends StatelessWidget{
           Container(
             height: 100,
             width: 100,
-            color: Colors.black,
+            color: Colors.white,
           )
 
         ],
