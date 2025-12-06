@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class Fruta {
   final String nombre;
   final String descripcion;
-  final String imagenUrl;
+  final Color color;
+  final double precio;
+  final int cantidad;
 
   Fruta({
     required this.nombre,
     required this.descripcion,
-    required this.imagenUrl,
+    required this.color,
+    required this.precio,
+    required this.cantidad,
   });
 }
