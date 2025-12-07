@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'frutas_screen.dart';
 import 'prueba_flutter.dart';
+import 'frutas_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: prueba_flutter(),
+      home: const FrutasScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
