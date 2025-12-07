@@ -83,6 +83,9 @@ class _FrutasScreenState extends State<FrutasScreen> {
   // Lista filtrada para la búsqueda
   List<Fruta> frutasFiltradas = [];
 
+  // Variable para controlar el estilo de visualización (compacto o expandido)
+  bool estiloCompacto = true;
+
   // VARIABLE DE ESTADO: Almacena la fruta seleccionada (puede ser null)
   Fruta? frutaSeleccionada;
 
@@ -106,20 +109,59 @@ class _FrutasScreenState extends State<FrutasScreen> {
                 children: [
                   Text(
                     'FRUTAS',
-                  style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  // BOTÓN DE MENÚ: Abre PopupMenuButton para cambiar estilo
+                  PopupMenuButton<String>(
+                    icon: const Icon(
+                      Icons.more_horiz,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                    color: const Color(0xFF2D2D2D),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: const BorderSide(color: Colors.white24, width: 1),
+                    ),
+                    offset: const Offset(0, 50),
+                    onSelected: (value) {
+                      if (value == 'cambiar_estilo') {
+                        setState(() {
+                          estiloCompacto = !estiloCompacto;
+                        });
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 'cambiar_estilo',
+                        child: Row(
+                          children: [
+                            Icon(
+                              estiloCompacto ? Icons.view_list : Icons.view_compact,
+                              color: Colors.blue,
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Cambio de estilo',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Icon(
+                    Icons.apple,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ],
               ),
-              Icon(
-                Icons.apple,
-                color: Colors.white,
-                size: 32,
-              ),
-            ],
-          ),        
-        ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
@@ -152,8 +194,8 @@ class _FrutasScreenState extends State<FrutasScreen> {
                 itemBuilder: (context, index) {
                   final fruta = frutasFiltradas[index];
                   return Container(
-                    margin: const EdgeInsets.all(16),
-                    padding: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.all(estiloCompacto ? 16 : 20),
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(20),
@@ -162,26 +204,166 @@ class _FrutasScreenState extends State<FrutasScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              fruta.nombre,
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 253, 254, 255),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                        // Columna con información de la fruta
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                fruta.nombre,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                estiloCompacto ? 'Datos' : fruta.descripcion,
+                                style: const TextStyle(color: Colors.white70),
+                                maxLines: estiloCompacto ? 1 : 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              // Mostrar precio solo en modo expandido
+                              if (!estiloCompacto) ...[
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.attach_money, color: Colors.green, size: 16),
+                                    Text(
+                                      '${fruta.precio.toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Icon(fruta.icono, color: fruta.color, size: 16),
+                                    Text(
+                                      ' ${fruta.cantidad} unidades',
+                                      style: const TextStyle(color: Colors.white70),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        // BOTÓN DE MENÚ: PopupMenuButton con opciones por fruta
+                        PopupMenuButton<String>(
+                          icon: const Icon(
+                            Icons.more_vert,
+                            color: Colors.white,
+                          ),
+                          color: const Color(0xFF2D2D2D),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: const BorderSide(color: Colors.white24, width: 1),
+                          ),
+                          offset: const Offset(-20, 0),
+                          onSelected: (value) {
+                            // MANEJO DE ACCIONES
+                            if (value == 'eliminar') {
+                              // Mostrar diálogo de confirmación
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: const Color(0xFF2D2D2D),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  title: const Text(
+                                    '¿Eliminar?',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  content: Text(
+                                    '¿Deseas eliminar ${fruta.nombre}?',
+                                    style: const TextStyle(color: Colors.white70),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Cancelar'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          frutasFiltradas.removeAt(index);
+                                        });
+                                        Navigator.pop(context);
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text('${fruta.nombre} eliminado'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Eliminar',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else if (value == 'editar') {
+                              // Acción de editar (estético)
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Editar ${fruta.nombre}'),
+                                  backgroundColor: Colors.blue,
+                                ),
+                              );
+                            } else if (value == 'carrito') {
+                              // Acción de carrito (estético)
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('${fruta.nombre} agregado al carrito'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                          },
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(
+                              value: 'eliminar',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.delete_outline, color: Colors.red),
+                                  SizedBox(width: 12),
+                                  Text(
+                                    'Eliminar',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
                               ),
                             ),
-                            const Text(
-                              'Datos',
-                              style: TextStyle(color: Colors.white70),
+                            const PopupMenuItem(
+                              value: 'editar',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.edit_outlined, color: Colors.blue),
+                                  SizedBox(width: 12),
+                                  Text(
+                                    'Editar',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              value: 'carrito',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.shopping_cart_outlined, color: Colors.green),
+                                  SizedBox(width: 12),
+                                  Text(
+                                    'Carrito',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
-                        ),
-                        const Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
                         ),
                       ],
                     ),

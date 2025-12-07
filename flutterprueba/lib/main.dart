@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'frutas_screen.dart';
-import 'prueba_flutter.dart';
-import 'frutas_screen.dart';
+//import 'prueba_flutter.dart';
+//import 'frutas_screen.dart';
 
 void main() {
   runApp(const MyApp());
